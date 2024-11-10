@@ -81,25 +81,53 @@ export declare interface Feishin {
     emit<U extends keyof FeishinEvents>(event: U, ...args: Parameters<FeishinEvents[U]>): boolean;
 }
 
+interface FeishinOptions {
+    host?: string;
+    port?: number;
+    reconnect?: boolean;
+}
+
+function createSocket(feishin: Feishin, reconnect: boolean) {
+    feishin.socket = new WebSocket(`ws://${feishin.host}:${feishin.port}/`);
+
+    feishin.socket.onmessage = (event: MessageEvent<any>) => {
+        const message: FeishinMessage = JSON.parse(event.data);
+        if (message.event === "state") feishin.emit("state", message.data as StateEvent);
+        if (message.event === "song") feishin.emit("song", message.data as Song);
+        if (message.event === "position") feishin.emit("position", message.data as number);
+        if (message.event === "playback") feishin.emit("playback", message.data as Playback);
+    };
+
+    feishin.socket.onopen = () => {
+        console.log("[Feishin] Connected to WebSocket");
+    };
+
+    if (reconnect)
+        feishin.socket.onclose = () => {
+            console.log("[Feishin] Socket closed, attempting reconnect in 10 seconds.");
+            setTimeout(() => createSocket(feishin, reconnect), 10_000);
+        };
+}
+
 export class Feishin extends EventEmitter {
-    private socket: WebSocket;
+    host: string;
+    port: number;
+    socket?: WebSocket;
 
-    constructor({ host = "localhost", port = 4333 }: { host?: string; port?: number }) {
+    constructor(options: FeishinOptions = {}) {
         super();
-        this.socket = new WebSocket(`ws://${host}:${port}/`);
+        const mergedOptions = Object.assign(
+            {
+                host: "localhost",
+                port: 4333,
+                reconnect: true,
+            },
+            options
+        );
 
-        // @ts-ignore
-        this.socket.onmessage = (event: MessageEvent<any>) => {
-            const message: FeishinMessage = JSON.parse(event.data);
-            // if (message.event !== "position") console.log("[Feishin] Event:", message.event);
-            if (message.event === "state") this.emit("state", message.data as StateEvent);
-            if (message.event === "song") this.emit("song", message.data as Song);
-            if (message.event === "position") this.emit("position", message.data as number);
-            if (message.event === "playback") this.emit("playback", message.data as Playback);
-        };
+        this.host = mergedOptions.host;
+        this.port = mergedOptions.port;
 
-        this.socket.onopen = () => {
-            console.log("[Feishin] Connected to WebSocket");
-        };
+        createSocket(this, mergedOptions.reconnect);
     }
 }

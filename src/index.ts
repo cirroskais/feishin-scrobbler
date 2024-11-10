@@ -4,7 +4,7 @@ import { updateNowPlaying, scrobble } from "./lib/Lastfm";
 let trackedSong: Song;
 let scrobbled = false;
 
-const feishin = new Feishin({});
+const feishin = new Feishin();
 
 feishin.on("state", (init) => {
     trackedSong = init.song;
