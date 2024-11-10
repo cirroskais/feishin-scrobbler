@@ -1,0 +1,1 @@
+export $(cat .env | xargs) && bun run src/index.ts
