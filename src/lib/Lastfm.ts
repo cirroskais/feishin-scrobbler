@@ -5,7 +5,6 @@ if (!KEY || !SECRET) throw new Error("Missing LASTFM_KEY/SECRET");
 import { exec } from "node:child_process";
 import {
     LastFMTrack,
-    LastFMUser,
     LastFMAuth,
     type LastFMBooleanNumber,
     type LastFMTrackUpdateNowPlayingParams,
