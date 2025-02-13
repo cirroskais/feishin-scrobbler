@@ -45,7 +45,7 @@ console.log("[LastFM] Acquired session key");
 let lastUpdate = 0;
 export async function updateNowPlaying(params: LastFMTrackUpdateNowPlayingParams) {
     if (!KEY || !SECRET || !storage.key) throw new Error("This error should be unreachable : 3");
-    if (Date.now() - lastUpdate < 250) return;
+    if (Date.now() - lastUpdate < 1000 * 30) return;
     lastUpdate = Date.now();
 
     console.log(`[LastFM] Now playing: ${params.artist} - ${params.track}`);
