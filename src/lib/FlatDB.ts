@@ -1,9 +1,9 @@
-const STORAGE_PATH = process.env.STORAGE_PATH;
-if (!STORAGE_PATH) throw new Error("Missing STORAGE_PATH");
+const LASTFM_STORAGE_PATH = process.env.LASTFM_STORAGE_PATH;
+if (!LASTFM_STORAGE_PATH) throw new Error("Missing LASTFM_STORAGE_PATH");
 
 export async function write(data: any) {
-    if (!STORAGE_PATH) throw new Error("This error should be unreachable : 1");
-    const file = Bun.file(STORAGE_PATH);
+    if (!LASTFM_STORAGE_PATH) throw new Error("This error should be unreachable : 1");
+    const file = Bun.file(LASTFM_STORAGE_PATH);
 
     let storage;
     try {
@@ -16,7 +16,7 @@ export async function write(data: any) {
 }
 
 export async function read() {
-    if (!STORAGE_PATH) throw new Error("This error should be unreachable : 2");
-    const file = Bun.file(STORAGE_PATH);
+    if (!LASTFM_STORAGE_PATH) throw new Error("This error should be unreachable : 2");
+    const file = Bun.file(LASTFM_STORAGE_PATH);
     return JSON.parse(await file.text());
 }
