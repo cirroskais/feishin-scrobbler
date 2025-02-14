@@ -1,14 +1,14 @@
 {
-  "name": "feishin-scrobbler",
-  "module": "src/index.ts",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "type": "module",
-  "dependencies": {
-    "lastfm-ts-api": "github:cirroskais/librefm-ts-api"
-  }
+    "name": "feishin-scrobbler",
+    "module": "src/index.ts",
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "type": "module",
+    "dependencies": {
+        "librefm-ts-api": "github:cirroskais/librefm-ts-api"
+    }
 }
